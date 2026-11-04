@@ -1,18 +1,37 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import {
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider as RouterThemeProvider,
+    Stack,
+} from "expo-router";
+import { NavigationBar } from "expo-navigation-bar";
+import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { ThemeModeProvider, useThemeMode } from "@/hooks/use-theme";
 
-SplashScreen.preventAutoHideAsync();
+/** Connects Expo Router navigation to the app's current appearance mode. */
+function AppNavigator() {
+  const { mode } = useThemeMode();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <>
+      <StatusBar style={mode === "dark" ? "light" : "dark"} />
+      <NavigationBar style={mode === "dark" ? "dark" : "light"} />
+      <RouterThemeProvider value={mode === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </RouterThemeProvider>
+    </>
+  );
+}
+
+/** Installs gesture handling and theme context above every route. */
+export default function RootLayout() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeModeProvider>
+        <AppNavigator />
+      </ThemeModeProvider>
+    </GestureHandlerRootView>
   );
 }

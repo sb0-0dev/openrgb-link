@@ -3,11 +3,22 @@ import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
 import { Fonts, ThemeColor } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
+/** Props for the app text primitive and its semantic typography variants. */
+/**
+ * Props for the app text primitive and its semantic typography variants.
+ * @property type Preset typography style; defaults to `default`.
+ * @property themeColor Semantic color token; defaults to the theme text color.
+ */
 export type ThemedTextProps = TextProps & {
   type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code';
   themeColor?: ThemeColor;
 };
 
+/**
+ * Text primitive that applies a semantic text style and current theme color.
+ * @param props Native text props plus the app's typography and color tokens.
+ * @returns A React Native `Text` element styled for the active theme.
+ */
 export function ThemedText({ style, type = 'default', themeColor, ...rest }: ThemedTextProps) {
   const theme = useTheme();
 
